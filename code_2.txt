@@ -1,0 +1,269 @@
+Structured Query Language (SQL)
+SQL is a standard language for interacting with relational databases. It allows users to perform tasks like creating tables, inserting data, querying data, and managing transactions. Let's dive into each concept in detail with examples.
+
+
+----------------------------------------------
+
+
+2.1 Database Programming with SQL
+Data Definition Language (DDL)
+DDL commands are used to define and manage the structure of database objects such as tables, views, and sequences.
+
+Datatypes Datatypes define the type of data that can be stored in a column.
+
+Numeric: INT, FLOAT, DECIMAL
+String: VARCHAR, CHAR
+Date/Time: DATE, TIMESTAMP
+Example:
+
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    salary DECIMAL(10, 2),
+    hire_date DATE
+);
+
+
+
+Table Tables store data in rows and columns. Example:
+
+
+CREATE TABLE departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50)
+);
+
+
+
+
+View A virtual table based on the result of a SQL query. Example:
+
+
+CREATE VIEW high_salary_employees AS
+SELECT name, salary FROM employees WHERE salary > 50000;
+
+
+
+
+Sequence Generates unique values, often used for primary keys. Example:
+
+
+CREATE SEQUENCE emp_seq START WITH 1 INCREMENT BY 1;
+Synonyms Alias for a database object, useful for simplification. Example:
+
+
+CREATE SYNONYM emp_view FOR high_salary_employees;
+
+----------------------------------------------
+
+
+2.2 Data Manipulation Language (DML)
+DML commands manipulate data stored in database tables.
+
+Insert Example:
+
+
+INSERT INTO employees (id, name, salary, hire_date)
+VALUES (1, 'Alice', 60000, '2024-01-01');
+
+
+
+Update Example:
+
+
+UPDATE employees
+SET salary = 65000
+WHERE id = 1;
+
+
+Delete Example:
+
+DELETE FROM employees
+WHERE id = 1;
+Merge Used to insert, update, or delete data in a single 
+
+
+statement. Example:
+
+MERGE INTO employees e
+USING (SELECT 1 AS id, 'Alice' AS name, 70000 AS salary FROM dual) src
+ON (e.id = src.id)
+WHEN MATCHED THEN UPDATE SET e.salary = src.salary
+WHEN NOT MATCHED THEN INSERT (id, name, salary) VALUES (src.id, src.name, src.salary);
+
+----------------------------------------------
+
+
+
+2.3 Transaction Control Language (TCL)
+TCL manages transactions in SQL.
+
+Commit Saves changes to the database. Example:
+
+COMMIT;
+
+
+Rollback Undoes changes made since the last commit. Example:
+
+ROLLBACK;
+
+
+
+Savepoint Sets a point to which a transaction can be rolled back.
+
+
+Example:
+
+SAVEPOINT sp1;
+UPDATE employees SET salary = 70000 WHERE id = 1;
+ROLLBACK TO sp1;
+
+----------------------------------------------
+
+2.4 Structured Query Language (SQL)
+
+Retrieving Data Using SELECT Example:
+
+SELECT name, salary FROM employees;
+
+
+Restricting Data Using WHERE Example:
+
+SELECT name FROM employees WHERE salary > 50000;
+Sorting Data Using ORDER BY
+
+ 
+Example:
+
+SELECT name, salary FROM employees ORDER BY salary DESC;
+Joining Tables Using JOIN Joins combine data from two or more tables.
+
+Example:
+
+SELECT e.name, d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.dept_id;
+
+----------------------------------------------
+
+
+2.5 Constraints
+NOT NULL Ensures a column cannot have a NULL value. Example:
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+
+UNIQUE Ensures all values in a column are unique. Example:
+
+ALTER TABLE employees ADD UNIQUE (email);
+Primary Key Uniquely identifies a row in a table. 
+
+Example:
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY
+);
+Foreign Key Links two tables together.
+
+
+Example:
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    emp_id INT,
+    FOREIGN KEY (emp_id) REFERENCES employees(id)
+);
+
+
+
+CHECK Ensures a column satisfies a condition.
+
+Example:
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    salary DECIMAL(10, 2) CHECK (salary > 0)
+);
+
+----------------------------------------------
+
+
+2.6 Indexes
+Indexes improve query performance.
+Example:
+
+CREATE INDEX idx_salary ON employees(salary);
+
+----------------------------------------------
+
+
+2.7 Single-Row Functions
+These operate on individual rows.
+
+
+CASE Example:
+
+SELECT name,
+       CASE
+           WHEN salary > 50000 THEN 'High'
+           ELSE 'Low'
+       END AS salary_level
+FROM employees;
+
+
+Number Functions
+
+Example:
+
+SELECT ROUND(salary, 2) FROM employees;
+
+
+Date Functions 
+
+Example:
+
+SELECT SYSDATE FROM dual;
+
+
+Conversion Functions 
+
+
+
+Example:
+
+SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD') FROM dual;
+NULL Functions Example:
+
+sql
+Copy code
+SELECT NVL(bonus, 0) FROM employees;
+
+----------------------------------------------
+
+
+2.8 Group Functions
+Group functions operate on multiple rows.
+
+COUNT Example:
+
+SELECT COUNT(*) FROM employees;
+
+
+MIN Example:
+
+SELECT MIN(salary) FROM employees;
+
+
+MAX Example:
+
+SELECT MAX(salary) FROM employees;
+
+
+SUM Example:
+
+SELECT SUM(salary) FROM employees;
+This overview provides a solid foundation for understanding SQL concepts. Would you like deeper examples or explanations on any specific section?
